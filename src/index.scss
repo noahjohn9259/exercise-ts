@@ -1,0 +1,13 @@
+/*!
+Copyright 2015-present Palantir Technologies, Inc. All rights reserved.
+Licensed under the terms of the LICENSE file distributed with this project.
+*/
+
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/utilities";
+
+.bp3-dark {
+  background-color: #30404d;
+}
