@@ -94,7 +94,7 @@ class App extends React.PureComponent<AllProps, IStateApp> {
   onDragEnd = (result: any) => {
     document.body.style.color = "inherit";
     document.body.style.backgroundColor = "white";
-    //re-ordering logic is here
+    // re-ordering logic is here
     const { destination, source, draggableId } = result;
 
     if (!destination) {
@@ -108,11 +108,11 @@ class App extends React.PureComponent<AllProps, IStateApp> {
       return;
     }
 
-    //source column
+    // source column
     const start = this.state.columns[source.droppableId];
     const finish = this.state.columns[destination.droppableId];
 
-    //if start column and finish column is the same
+    // if start column and finish column is the same
     if (start === finish) {
       const newTaskIds: string[] = Array.from(start.tasksIds);
       newTaskIds.splice(source.index, 1);
@@ -124,21 +124,21 @@ class App extends React.PureComponent<AllProps, IStateApp> {
 
     // Moving to another column logic
 
-    //first remove the draggable from tasksIds array
+    // first remove the draggable from tasksIds array
     const startTaskIds = Array.from(start.tasksIds);
     startTaskIds.splice(source.index, 1);
 
-    //Modify source tasksIds Array
+    // Modify source tasksIds Array
     const newStart = {
       ...start,
       tasksIds: startTaskIds
     };
 
-    //re arrange destination column array order
+    // re arrange destination column array order
     const finishTaskIds = Array.from(finish.tasksIds);
     finishTaskIds.splice(destination.index, 0, draggableId);
 
-    //Modify destination tasksIds Array
+    // Modify destination tasksIds Array
     const newFinish = {
       ...finish,
       tasksIds: finishTaskIds
@@ -148,6 +148,12 @@ class App extends React.PureComponent<AllProps, IStateApp> {
   };
 
   public render() {
+    if (
+      Object.keys(this.props.tasks).length === 0 ||
+      Object.keys(this.props.columns).length === 0
+    ) {
+      return null;
+    }
     return (
       <div>
         <DragDropContext
@@ -158,11 +164,19 @@ class App extends React.PureComponent<AllProps, IStateApp> {
           <Container>
             {this.state.columnOrder.map((columnId: string) => {
               const column = this.state.columns[columnId];
-              const tasks = column.tasksIds.map(
-                (taskId: string) => this.state.tasks[taskId]
+              const tasks =
+                column &&
+                column.tasksIds.map(
+                  (taskId: string) => this.state.tasks[taskId]
+                );
+              // tasks - array of tasks objects from state
+              return (
+                <Column
+                  key={column ? column.id : columnId}
+                  column={column || { id: columnId }}
+                  tasks={tasks || []}
+                />
               );
-              //tasks - array of tasks objects from state
-              return <Column key={column.id} column={column} tasks={tasks} />;
             })}
           </Container>
         </DragDropContext>
@@ -175,7 +189,7 @@ class App extends React.PureComponent<AllProps, IStateApp> {
   };
 }
 
-//mapStateToProps entire state here
+// mapStateToProps entire state here
 const mapStateToProps = (state: IApplicationState) => {
   return {
     accounts: state.accounts,

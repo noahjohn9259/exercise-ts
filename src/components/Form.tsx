@@ -1,26 +1,28 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { withFormik, Form, Field } from "formik";
+import { withFormik, Form, Field, InjectedFormikProps } from "formik";
 import * as Yup from "yup";
 import * as shortid from "shortid";
 import { postTask } from "../actions/taskActions";
 import { AccountType } from "../reducers/types";
 import { IApplicationState } from "../reducers/index";
-
 interface IpropsFormComponent {
   errors: any;
   touched: any;
   isSubmitting: any;
   accounts: AccountType[];
 }
-
 interface PropsFromDispatch {
   postTask: any;
 }
-
 type AllProps = IpropsFormComponent & PropsFromDispatch;
-
-const FormComponent: React.SFC<AllProps> = (props: AllProps) => {
+interface FormikValues {
+  account: string;
+  title: string;
+}
+const FormComponent: React.SFC<InjectedFormikProps<AllProps, FormikValues>> = (
+  props: AllProps
+) => {
   const { errors, touched, isSubmitting, accounts } = props;
   return (
     <Form>
@@ -41,7 +43,6 @@ const FormComponent: React.SFC<AllProps> = (props: AllProps) => {
     </Form>
   );
 };
-
 const FormikApp = withFormik({
   mapPropsToValues() {
     return {
@@ -54,10 +55,9 @@ const FormikApp = withFormik({
       .min(3)
       .required()
   }),
-  handleSubmit(values, formikBag) {
+  handleSubmit(values: FormikValues, formikBag: any) {
     const { resetForm, setSubmitting, props } = formikBag;
     const { postTask } = props;
-
     const taskId = shortid.generate();
     const accountId = values.account;
     const payload = { title: values.title, id: taskId, accountId: accountId };
@@ -66,17 +66,14 @@ const FormikApp = withFormik({
     setSubmitting(false);
   }
 })(FormComponent);
-
 const mapStateToProps = (state: IApplicationState) => {
   return {
     accounts: state.accounts
   };
 };
-
 const mapDispatchToProps = {
   postTask
 };
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps

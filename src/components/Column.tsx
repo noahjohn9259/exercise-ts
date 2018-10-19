@@ -16,7 +16,7 @@ const Title = styled.h3`
   padding: 8px;
 `;
 const TaskList = styled.div`
-  padding 8px;
+  padding: 8px;
   transition: background-color 0.3s ease;
   background-color: ${(props: any) =>
     props.isDraggingOver ? "lightblue" : "white"};
@@ -25,15 +25,16 @@ const TaskList = styled.div`
 `;
 
 interface IPropsColumn {
-  tasks: TaskType[] | [];
+  tasks: TaskType[] | undefined;
   column: ColumnType;
 }
 
 class Column extends React.PureComponent<IPropsColumn> {
   public render() {
+    console.log(this.props.tasks);
     const { title } = this.props.column;
     //check first if task data is already fetched
-    if (this.props.tasks.length < 1) {
+    if (this.props.tasks && this.props.tasks.length < 1) {
       return (
         <Container>
           <Title>{title}</Title>
@@ -61,9 +62,15 @@ class Column extends React.PureComponent<IPropsColumn> {
                 {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
               >
-                {this.props.tasks.map((task: TaskType, index: number) => (
-                  <Task key={task.id} task={task} index={index} title={title} />
-                ))}
+                {this.props.tasks &&
+                  this.props.tasks.map((task, index) => (
+                    <Task
+                      key={task.id}
+                      task={task}
+                      index={index}
+                      title={title}
+                    />
+                  ))}
                 {provided.placeholder}
               </TaskList>
             )}

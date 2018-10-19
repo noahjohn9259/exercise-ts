@@ -12,8 +12,6 @@ const Container = styled.div`
   border-radius: 2px;
   padding: 8px;
   margin-bottom: 8px;
-  background-color: ${(props: any) =>
-    props.isDragging ? "gainsboro" : "white"};
 `;
 
 interface PropsFromDispatch {
@@ -28,7 +26,7 @@ interface IOwnProps {
   title: string;
 }
 
-type IState = {};
+interface IState {}
 
 type AllProps = IOwnProps & PropsFromMap & PropsFromDispatch;
 
@@ -36,9 +34,9 @@ class Task extends React.Component<AllProps, IState> {
   handleBlur: React.ReactEventHandler<HTMLInputElement> = ({
     target
   }): void => {
-    //get content via target.innerHTML and update app state accordingly
+    // get content via target.innerHTML and update app state accordingly
     const taskObj: TaskType = this.props.task;
-    const newTitle = target.innerHTML;
+    const newTitle = (target as any).innerHTML;
     this.props.editTaskTitle(newTitle, taskObj);
   };
 
@@ -50,31 +48,33 @@ class Task extends React.Component<AllProps, IState> {
 
     return (
       <Draggable draggableId={this.props.task.id} index={this.props.index}>
-        {(provided, snapshot) => (
-          <Container
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            innerRef={provided.innerRef}
-            isDragging={snapshot.isDragging}
-          >
-            Title:{" "}
-            <EditableTitle handleBlur={this.handleBlur}>
-              {task.title}
-            </EditableTitle>
-            <hr />
-            <div>
-              Assignee:
-              {!matchingAccount
-                ? ""
-                : " " +
-                  matchingAccount.firstname +
-                  " " +
-                  matchingAccount.lastname}
-            </div>
-            <hr />
-            <div>Status: {this.props.title} </div>
-          </Container>
-        )}
+        {(provided, snapshot) => {
+          console.log(snapshot);
+          return (
+            <Container
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              innerRef={provided.innerRef}
+            >
+              Title:{" "}
+              <EditableTitle handleBlur={this.handleBlur}>
+                {task.title}
+              </EditableTitle>
+              <hr />
+              <div>
+                Assignee:
+                {!matchingAccount
+                  ? ""
+                  : " " +
+                    matchingAccount.firstname +
+                    " " +
+                    matchingAccount.lastname}
+              </div>
+              <hr />
+              <div>Status: {this.props.title} </div>
+            </Container>
+          );
+        }}
       </Draggable>
     );
   }

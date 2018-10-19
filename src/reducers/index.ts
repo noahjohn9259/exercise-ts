@@ -10,7 +10,7 @@ import {
 } from "./types";
 
 // Additional props for connected React components. This prop is passed by default with `connect()`
-export interface ConnectedReduxProps<A extends Action = AnyAction> {
+export interface IConnectedReduxProps<A extends Action = AnyAction> {
   dispatch: Dispatch<A>;
 }
 

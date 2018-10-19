@@ -1,7 +1,9 @@
 import { createStore, applyMiddleware, compose, Store } from "redux";
-import { IApplicationState } from "./reducers/index";
+import rootReducer, { IApplicationState } from "./reducers";
 import thunk from "redux-thunk";
-import rootReducer from "./reducers/index";
+// This provides a Redux middleware which connects to our `react-router` instance.
+import { connectRouter, routerMiddleware } from "connected-react-router";
+import { History } from "history";
 
 /*
 expected tasks data
@@ -22,47 +24,47 @@ expected tasks data
     }
 
 */
-const initialState: IApplicationState = {
-  tasks: {},
-  columns: {
-    "column-1": {
-      id: "column-1",
-      title: "No Status",
-      tasksIds: []
-    },
-    "column-2": {
-      id: "column-2",
-      title: "Ready",
-      tasksIds: []
-    },
-    "column-3": {
-      id: "column-3",
-      title: "In Progress",
-      tasksIds: []
-    },
-    "column-4": {
-      id: "column-4",
-      title: "Completed",
-      tasksIds: []
-    }
-  },
-  //Facilitate reordering of columns
-  columnOrder: ["column-1", "column-2", "column-3", "column-4"],
-  accounts: []
-};
+// const initialState: IApplicationState = {
+//   tasks: {},
+//   columns: {
+//     "column-1": {
+//       id: "column-1",
+//       title: "No Status",
+//       tasksIds: []
+//     },
+//     "column-2": {
+//       id: "column-2",
+//       title: "Ready",
+//       tasksIds: []
+//     },
+//     "column-3": {
+//       id: "column-3",
+//       title: "In Progress",
+//       tasksIds: []
+//     },
+//     "column-4": {
+//       id: "column-4",
+//       title: "Completed",
+//       tasksIds: []
+//     }
+//   },
+//   //Facilitate reordering of columns
+//   columnOrder: ["column-1", "column-2", "column-3", "column-4"],
+//   accounts: []
+// };
 
 export default function configureStore(
+  history: History,
   initialState: IApplicationState
 ): Store<IApplicationState> {
-  const middlewares = [thunk];
-
+  const middlewares = [thunk, routerMiddleware(history)];
   const store = createStore(
-    rootReducer,
+    connectRouter(history)(rootReducer),
     initialState,
     compose(
-      applyMiddleware(...middlewares),
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__()
+      applyMiddleware(...middlewares)
+      // window.__REDUX_DEVTOOLS_EXTENSION__ &&
+      //   window.__REDUX_DEVTOOLS_EXTENSION__()
     )
   );
 
