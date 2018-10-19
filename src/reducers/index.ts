@@ -15,10 +15,10 @@ export interface ConnectedReduxProps<A extends Action = AnyAction> {
 }
 
 export interface IApplicationState {
-  tasks: TaskReducerState;
-  columns: ColumnReducerState;
-  columnOrder: string[];
-  accounts: AccountsReducerState;
+  tasks: TaskReducerState | {};
+  columns: ColumnReducerState | {};
+  columnOrder: string[] | [];
+  accounts: AccountsReducerState | [];
 }
 
 export default combineReducers<IApplicationState>({

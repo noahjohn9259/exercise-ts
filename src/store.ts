@@ -1,4 +1,9 @@
-import { createStore, applyMiddleware, compose, Store } from "redux";
+import {
+  createStore,
+  applyMiddleware,
+  compose,
+  Store
+} from "redux"; /* Store */
 import { IApplicationState } from "./reducers/index";
 import thunk from "redux-thunk";
 import rootReducer from "./reducers/index";
