@@ -1,15 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import App from "./App";
-import "../node_modules/@blueprintjs/core/lib/css/blueprint.css";
-import "../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css";
-import "./index.css";
-import registerServiceWorker from "./registerServiceWorker";
+import App from "./components/App";
 
-ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
+import { Provider } from "react-redux";
+import store from "./store";
+import "bootstrap/dist/css/bootstrap.css";
 
-if ((module as any).hot) {
-  (module as any).hot.accept();
-}
-
-registerServiceWorker();
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root") as HTMLElement
+);
